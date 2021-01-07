@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import Demo from './demoComponent';
 import './App.css';
 import BackgroundMusicProvider from './context/BackgroundMusic.context';

@@ -1,8 +1,10 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BackgroundMusicContext } from './context/BackgroundMusic.context';
 const Demo = (props:any) => {
-console.log(props)
+const {musicEnabled,isLobbyMusicPlaying} = useContext(BackgroundMusicContext)
+console.log(musicEnabled)
   return (
       <div className="App">
         <header className="App-header">

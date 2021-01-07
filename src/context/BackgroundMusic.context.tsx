@@ -6,6 +6,8 @@ import { playSound, SOUNDS, pauseSound } from '../soundUtils';
 import { APP_STATE, ANALYTICS_EVENTS, LOCAL_STORAGE_NAME } from '../constants';
 
 
+
+
 export interface backgroundMusic {
   musicEnabled: Boolean,
   isLobbyMusicPlaying: Boolean,
@@ -14,8 +16,16 @@ export interface backgroundMusic {
   setIsLobbyMusicPlaying: (isLobbyMusicPlaying: boolean) => void,
   setIsSoundEffectEnabled: (isSoundEffectEnabled: boolean) => void
 }
+export const musicContextDefaultValue: backgroundMusic = {
+  musicEnabled: false,
+  isLobbyMusicPlaying: false,
+  isSoundEffectEnabled: false,
+  setMusicEnable: (musicEnable: boolean) => {},
+  setIsLobbyMusicPlaying: (isLobbyMusicPlaying: boolean) => {},
+  setIsSoundEffectEnabled: (isSoundEffectEnabled: boolean) => {}
+}
 
-const BackgroundMusicContext = createContext<backgroundMusic | null>(null);
+export const BackgroundMusicContext = createContext<backgroundMusic>(musicContextDefaultValue);
 
 
 const backgroundMusicProvider = (props:any) => {
