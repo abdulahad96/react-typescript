@@ -13,16 +13,22 @@ export interface backgroundMusic {
   isLobbyMusicPlaying: Boolean,
   isSoundEffectEnabled: Boolean,
   setMusicEnable: (musicEnable: boolean) => void,
-  setIsLobbyMusicPlaying: (isLobbyMusicPlaying: boolean) => void,
-  setIsSoundEffectEnabled: (isSoundEffectEnabled: boolean) => void
+  playBackgroundMusic: () => void,
+  setIsSoundEffectEnabled: (isSoundEffectEnabled:boolean) => void,
+  pauseBackgroundMusic:()=>void,
+  playMusic: (music:any)=>void,
+  playSoundEffect: (soundEffect: any)=>void
 }
 export const musicContextDefaultValue: backgroundMusic = {
-  musicEnabled: false,
-  isLobbyMusicPlaying: false,
-  isSoundEffectEnabled: false,
+  musicEnabled: true,
+  isLobbyMusicPlaying: true,
+  isSoundEffectEnabled: true,
   setMusicEnable: (musicEnable: boolean) => {},
-  setIsLobbyMusicPlaying: (isLobbyMusicPlaying: boolean) => {},
-  setIsSoundEffectEnabled: (isSoundEffectEnabled: boolean) => {}
+  playBackgroundMusic: ()  => {},
+  setIsSoundEffectEnabled: (isSoundEffectEnabled:boolean) => {},
+  pauseBackgroundMusic:()=>{},
+  playMusic: (music:any)=>{},
+  playSoundEffect: (soundEffect: any)=>{}
 }
 
 export const BackgroundMusicContext = createContext<backgroundMusic>(musicContextDefaultValue);
@@ -30,17 +36,64 @@ export const BackgroundMusicContext = createContext<backgroundMusic>(musicContex
 
 const backgroundMusicProvider = (props:any) => {
   const {children} = props;
-  const [musicEnabled, setMusicEnable] = useState(false);
-  const [isLobbyMusicPlaying, setIsLobbyMusicPlaying] = useState(false);
-  const [isSoundEffectEnabled, setIsSoundEffectEnabled] = useState(false);
+  const [musicEnabled, setMusicEnable] = useState<boolean>(true);
+  const [isLobbyMusicPlaying, setIsLobbyMusicPlaying] = useState<boolean>(false);
+  const [isSoundEffectEnabled, setSoundEffectEnabled] = useState<boolean>(true);
+
+ const playBackgroundMusic = (callback = () => {}) => {
+     if (musicEnabled && !isLobbyMusicPlaying) {
+      playSound(SOUNDS.LOBBY_BACKGROUND_MUSIC, callback);
+    setIsLobbyMusicPlaying(true)
+    }
+  };
+
+  const playMusic = (music:any) => {
+    if (musicEnabled) {
+      playSound(music);
+    }
+  };
+
+  const pauseBackgroundMusic = (callback = () => {}) => {
+    if (isLobbyMusicPlaying) {
+      pauseSound(SOUNDS.LOBBY_BACKGROUND_MUSIC, callback);
+      setIsLobbyMusicPlaying(false)
+    }
+  };
+
+ const setMusicEnabled = (isMusicEnabled: any) => {
+ 
+    
+      if (isMusicEnabled) {
+        playBackgroundMusic();
+      } else {
+        pauseBackgroundMusic();
+      }
+ 
+  };
+
+ const  setIsSoundEffectEnabled = (isSoundEffectEnabled: any) => {
+    
+  setSoundEffectEnabled(true);
+  };
+
+ const playSoundEffect = (soundEffect: any) => {
+    if (isSoundEffectEnabled) {
+      playSound(soundEffect);
+    }
+  };
+
+
   return (
     <BackgroundMusicContext.Provider value={{
       musicEnabled,
       isLobbyMusicPlaying,
       isSoundEffectEnabled,
-      setMusicEnable,
-      setIsLobbyMusicPlaying,
-      setIsSoundEffectEnabled
+      setMusicEnable: setMusicEnabled,
+      playBackgroundMusic: playBackgroundMusic,
+      pauseBackgroundMusic: pauseBackgroundMusic,
+      setIsSoundEffectEnabled: setIsSoundEffectEnabled,
+      playMusic: playMusic,
+      playSoundEffect: playSoundEffect
     }}>
       {children}
     </BackgroundMusicContext.Provider>
